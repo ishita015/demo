@@ -1,17 +1,15 @@
-const http = require('http');
-const port = 3300;
-const app = require('./app');
-const mongoose = require('mongoose');
-const config = require('./config');
+//Install express server
+const express = require('express');
+const path = require('path');
 
-mongoose.connect(config.url,  { useNewUrlParser: true })
-.then(() => {
-    console.log("Connected to Database");
-}).catch(err => {
-    console.log(err);
-    process.exit();
+const app = express();
+
+// Serve only the static files form the dist directory
+app.use(express.static(__dirname + '/dist/test1'));
+
+app.get('/*', function(req,res) {
+res.sendFile(path.join(__dirname+'/dist/test1/index.html'));
 });
 
-http.createServer(app).listen(port, () => {
-    console.log("Server is listening on port " + port);
-});
+// Start the app by listening on the default Heroku port
+app.listen(process.env.PORT || 8080);
